@@ -396,7 +396,24 @@ get_download_url() {
   local install_type=$1
   local version=$2
 
-  echo "https://github.com/php/php-src/archive/php-${version}.tar.gz"
+  echo "https://github.com/php/php-src/archive/refs/tags/php-${version}.tar.gz"
+}
+
+get_os(){
+ cat /etc/os-release|grep ^NAME|grep -oP '"\K[^"\047]+(?=["\047])'
+}
+get_os_version(){
+  cat /etc/os-release|grep ^VERSION_ID|grep -oP '"\K[^"\047]+(?=["\047])'
+}
+
+handle_versions_dependencies() {
+  local version=$1
+  if [ ! -z "$(get_os|grep -i DeBiAn)" ]; then
+   if [ get_os_version >  10 ]; then
+    echo Need to handle 
+    echo A known way to handle is to install Homebrew for Linux first and then 
+   fi
+  fi
 }
 
 get_php_version() {
