@@ -65,6 +65,14 @@ install_php() {
     else
       export ASDF_PKG_MISSING="$ASDF_PKG_MISSING openssl"
     fi
+  else
+   local openssl_path=$(homebrew_package_path openssl@1.1)
+   #--with-openssl=$openssl_path"
+    if [ -n "$openssl_path" ]; then
+      export "PKG_CONFIG_PATH=${openssl_path}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+    else
+      export ASDF_PKG_MISSING="$ASDF_PKG_MISSING openssl"
+    fi  
   fi
 
   echo "Downloading source code..."
@@ -355,8 +363,15 @@ os_based_configure_options() {
     else
       configure_options="$configure_options --with-png-dir=$libpng_path --with-png"
     fi
-  fi
+  
+   local libopenssl_path=$(locate libssl.so | awk '{ print length(), $0 | "sort -n" }' | cut -d" " -f2- | head -n 1)
+   if [ "$openssl_path" = "" ]; then
+     export ASDF_PKG_MISSING="$ASDF_PKG_MISSING openssl"
+   else
+     configure_options="$configure_options --with-openssl=$openssl_path"
+   fi
 
+  fi
   echo $configure_options
 }
 
@@ -425,6 +440,8 @@ get_php_version() {
     echo "${version_info[0]}-${version_info[1]}"
   fi
 }
+
+
 
 install_php "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
 install_composer "$ASDF_INSTALL_PATH"

@@ -24,6 +24,17 @@ for us to support them.
 asdf plugin-add php https://github.com/asdf-community/asdf-php.git
 ```
 
+# Configuration
+
+## Environment Variables
+
+- `ASDF_PHP_INCLUDE_DEPS` - when set to `1`, this plugin will consider the executables of the dependencies of the installed package as well. For example, when installing `ansible`, the `ansible` command actually comes from its depency, `ansible-core`. This is the same as Pipx's `--include-deps` flag.
+- `ASDF_PHP_DEFAULT_SSL_PATH` - Path to a `ssl`/`openssl` binary this plugin should use. Default is unset. See SSL Resolution section for more details.
+- `ASDF_SSL_VENV_COPY_MODE`:
+  - `0`: (default) Add `--copies` flag to venvs created with a specific Python version. Symlinks otherwise.
+  - `1`: Prefer `--copies` whenever possible (`--copies` does not work with `/usr/bin/python3` on macOS).
+- `ASDF_PHP_DEBUG` - Set to `1` for additional logging
+
 ## Note
 
 Composer is installed globally alongside PHP by default. If your application requires additional php extensions, you may need to install them via `pecl`. For example:
